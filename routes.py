@@ -7,26 +7,8 @@ from elasticapm.contrib.flask import ElasticAPM
 import os
 from dotenv import load_dotenv
 
-# # Set logger to write to "/logs/ecs_logs.ndjson" for Filebeat to ship
-# logging.basicConfig(filename="logs/ecs_logs.ndjson", 
-# 					filemode='w')
-
-# # Get the Logger
-# logger = logging.getLogger("app")
-# logger.setLevel(logging.DEBUG)
-
-# # Add an ECS formatter to the Handler
-# handler = logging.StreamHandler()
-# handler.setFormatter(ecs_logging.StdlibFormatter())
-# logger.addHandler(handler)
-
-# app = Flask(__name__)
-
 # Initialize Flask app
 app = Flask(__name__)
-
-# Configure Elastic APM
-apm = ElasticAPM(app)
 
 # Set logger to write to "logs/ecs_logs.ndjson" for Filebeat to ship
 log_file_path = "logs/ecs_logs.ndjson"
@@ -56,7 +38,9 @@ app.config['ELASTIC_APM'] = {
   'SECRET_TOKEN': os.getenv('SECRET_TOKEN'),
   'SERVER_URL': os.getenv('SERVER_URL'),
   'ENVIRONMENT': os.getenv('ENVIRONMENT'),
+  'DEBUG': True
 }
+
 apm = ElasticAPM(app)
 
 # two decorators, same function
@@ -64,7 +48,12 @@ apm = ElasticAPM(app)
 @app.route('/index.html')
 @elasticapm.capture_span()
 def index():
-    logger.debug("Tiger home page", extra={"http.request.method": "get"})
+    # logger.debug("Tiger home page", extra={"http.request.method": "get"})
+    logger.info("Tiger home page")
+
+    with elasticapm.capture_span('home-page-custom-span', labels={"type": "arabica", "span_type": "custom"}):
+        print("hello world!")
+
     return render_template('index.html', the_title='Tiger Home Page')
 
 @app.route('/symbol.html')

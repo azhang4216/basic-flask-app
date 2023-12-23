@@ -21,5 +21,10 @@ filebeat-8.11.3-darwin-x86_64.tar.gz
 /filebeat-8.11.3-darwin-x86_64
 /apm-server-8.10.4-darwin-x86_64.tar.gz
 /apm-server-8.10.4-darwin-x86_64
+/elastic-agent-8.10.4-darwin-x86_64.tar.gz
+/elastic-agent-8.10.4-darwin-x86_64
+
+logs/
+standalone_agent_setup.sh
 
 .env
